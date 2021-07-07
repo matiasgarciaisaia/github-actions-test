@@ -1,0 +1,15 @@
+name: Build
+
+on:
+  - push
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Fail 1/4 of the builds
+        run: |
+          value=$(( $RANDOM % 4 ))
+          echo "Value is $value"
+          [ $value -ne 0 ]
+        shell: bash
