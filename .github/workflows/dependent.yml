@@ -13,8 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Print debug info
-        run: |
-          jq . <<< ${{ toJSON(github.event.workflow_run) }}
-          jq . <<< ${{ toJSON(github.event) }}
-        shell: bash
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha}}
+      - run: cat .github/workflow/*
