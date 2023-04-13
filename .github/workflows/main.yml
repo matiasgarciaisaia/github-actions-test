@@ -1,18 +1,32 @@
-name: Build
+name: Run on some branches
 
 on:
-  workflow_dispatch:
-    inputs:
-      url_parameter:
-        default: 'let''s URLEncode() this & share! yeaaah#'
-        required: true
+  push:
+    branches:
+      - develop
+      - release/**
+      - main
+      - preview/**
+    tags:
+      - v**
+    paths-ignore:
+      - docs/**
+      - README.md
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
+  first-job:
+    name: First Job
+    runs-on: ubuntu-22.04
     steps:
-      - name: Query external URL
-        run: curl -s -XPOST "http://2zp0vr405qcvpx0o.b.requestbin.net?external=${EXTERNAL_PARAMETER}&secret=${SECRET_PART}"
-        env:
-          EXTERNAL_PARAMETER: ${{ github.event.inputs.url_parameter }}
-          SECRET_PART: ${{ secrets.SECRET_VARIABLE }} # Th"is sup\e;'r $ecret value &needs=encoding!# asf?jell
+      - run: echo This is the first job
+
+  second-job:
+    name: Second Job
+    needs: first-job
+    runs-on: ubuntu-22.04
+    env:
+      SUPER_VARIABLE: 'super-variable-from-env'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Print variable
+        run: echo "The job's variable is ${SUPER_VARIABLE}"
